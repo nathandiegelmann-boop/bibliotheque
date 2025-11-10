@@ -57,7 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_delete'])) {
             $stmt_delete->bindParam(':id_livre', $id_livre, PDO::PARAM_INT);
             
             if ($stmt_delete->execute()) {
-                header('Location: livres.php?message=Livre supprimé avec succès');
+                $_SESSION['success_message'] = 'Livre supprimé avec succès';
+                header('Location: livres.php');
                 exit();
             } else {
                 $error = "Erreur lors de la suppression du livre.";
