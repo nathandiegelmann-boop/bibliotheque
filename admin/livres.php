@@ -44,11 +44,12 @@ include __DIR__ . '/../includes/nav.php';
     </header>
 
     <!-- Message de succès -->
-    <?php if (isset($_GET['message'])): ?>
+    <?php if (isset($_SESSION['success_message'])): ?>
         <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
             <p class="font-bold">Succès</p>
-            <p><?= htmlspecialchars($_GET['message']) ?></p>
+            <p><?= htmlspecialchars($_SESSION['success_message']) ?></p>
         </div>
+        <?php unset($_SESSION['success_message']); ?>
     <?php endif; ?>
 
     <!-- Section de la liste des livres -->

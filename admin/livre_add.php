@@ -46,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bindParam(':couverture', $couverture, PDO::PARAM_STR);
             
             if ($stmt->execute()) {
-                header('Location: livres.php?message=Livre ajouté avec succès');
+                $_SESSION['success_message'] = 'Livre ajouté avec succès';
+                header('Location: livres.php');
                 exit();
             } else {
                 $errors[] = "Erreur lors de l'ajout du livre.";
