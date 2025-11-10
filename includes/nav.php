@@ -31,6 +31,11 @@
                                   </a>
                             </li>
                             <li>
+                                  <a href="/bibliotheque/admin/abonnes.php" class="hover:text-blue-200 transition font-medium">
+                                        Gérer les abonnés
+                                  </a>
+                            </li>
+                            <li>
                                   <span class="text-blue-200">
                                         Bonjour, Jean-Michel
                                   </span>

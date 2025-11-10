@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 05 nov. 2025 à 22:49
+-- Généré le : lun. 10 nov. 2025 à 17:21
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -98,7 +98,7 @@ CREATE TABLE `administrateur` (
 --
 
 INSERT INTO `administrateur` (`id_admin`, `login`, `mot_de_passe`, `nom`, `prenom`, `email`, `date_creation`, `dernier_acces`) VALUES
-(1, 'admin', '$2y$10$5DJajd4i4u9ywCfKmzUsp.5GuzRXLqCp4cyjBo4deKKcu3Xtnb/mm', 'Administrateur', 'Principal', 'admin@bibliotheque.fr', '2018-01-01 10:00:00', '2025-11-02 00:22:12'),
+(1, 'admin', '$2y$10$5DJajd4i4u9ywCfKmzUsp.5GuzRXLqCp4cyjBo4deKKcu3Xtnb/mm', 'Administrateur', 'Principal', 'admin@bibliotheque.fr', '2018-01-01 10:00:00', '2025-11-10 15:52:44'),
 (2, 'bibliothecaire1', '$2y$10$5DJajd4i4u9ywCfKmzUsp.5GuzRXLqCp4cyjBo4deKKcu3Xtnb/mm', 'Lemaire', 'Sophie', 'sophie.lemaire@bibliotheque.fr', '2018-01-05 09:00:00', '2018-01-28 16:45:00'),
 (3, 'gestion', '$2y$10$5DJajd4i4u9ywCfKmzUsp.5GuzRXLqCp4cyjBo4deKKcu3Xtnb/mm', 'Roussel', 'Marc', 'marc.roussel@bibliotheque.fr', '2018-01-10 11:30:00', '2018-01-27 10:15:00');
 
@@ -122,7 +122,6 @@ CREATE TABLE `emprunt` (
 
 INSERT INTO `emprunt` (`id_emprunt`, `id_livre`, `id_abonne`, `date_sortie`, `date_rendu`) VALUES
 (1, 100, 1, '2011-12-17', '2011-12-18'),
-(2, 101, 2, '2011-12-18', '2011-12-20'),
 (3, 100, 3, '2011-12-19', '2011-12-22'),
 (4, 103, 4, '2011-12-19', '2011-12-22'),
 (5, 104, 1, '2011-12-19', '2011-12-28'),
@@ -160,7 +159,6 @@ INSERT INTO `emprunt` (`id_emprunt`, `id_livre`, `id_abonne`, `date_sortie`, `da
 (37, 134, 33, '2016-05-15', '2016-05-29'),
 (38, 135, 34, '2016-06-20', '2016-07-04'),
 (39, 100, 35, '2016-07-12', '2016-07-26'),
-(40, 101, 5, '2016-08-18', '2016-09-01'),
 (41, 102, 6, '2016-09-10', '2016-09-24'),
 (42, 103, 7, '2016-10-15', '2016-10-29'),
 (43, 104, 8, '2016-11-20', '2016-12-04'),
@@ -192,7 +190,6 @@ INSERT INTO `emprunt` (`id_emprunt`, `id_livre`, `id_abonne`, `date_sortie`, `da
 (69, 130, 5, '2017-11-18', '2017-12-02'),
 (70, 131, 6, '2017-12-12', '2017-12-26'),
 (71, 100, 26, '2016-05-10', '2016-05-24'),
-(72, 101, 27, '2016-06-15', '2016-06-29'),
 (73, 102, 28, '2016-07-20', '2016-08-03'),
 (74, 103, 29, '2016-08-12', '2016-08-26'),
 (75, 104, 30, '2016-09-18', '2016-10-02'),
@@ -201,6 +198,60 @@ INSERT INTO `emprunt` (`id_emprunt`, `id_livre`, `id_abonne`, `date_sortie`, `da
 (78, 107, 33, '2016-12-10', '2016-12-24'),
 (79, 108, 34, '2017-01-18', '2017-02-01'),
 (80, 109, 35, '2017-02-22', '2017-03-08');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `identifiant_abonne`
+--
+
+CREATE TABLE `identifiant_abonne` (
+  `mot_de_passe` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `id_identifiant_abonne` int(11) NOT NULL,
+  `abonne_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `identifiant_abonne`
+--
+
+INSERT INTO `identifiant_abonne` (`mot_de_passe`, `email`, `id_identifiant_abonne`, `abonne_id`) VALUES
+('toto', 'guillaume.dubois@email.fr', 1, 1),
+('toto', 'benoit.martin@email.fr', 3, 2),
+('toto', 'chloe.bernard@email.fr', 4, 3),
+('toto', 'laura.petit@email.fr', 5, 4),
+('toto', 'thomas.rousseau@email.fr', 6, 5),
+('toto', 'marie.leroy@email.fr', 7, 6),
+('toto', 'lucas.moreau@email.fr', 8, 7),
+('toto', 'emma.simon@email.fr', 9, 8),
+('toto', 'hugo.laurent@email.fr', 10, 9),
+('toto', 'lea.lefebvre@email.fr', 11, 10),
+('toto', 'nathan.michel@email.fr', 12, 11),
+('toto', 'camille.garcia@email.fr', 13, 12),
+('toto', 'antoine.david@email.fr', 14, 13),
+('toto', 'julie.bertrand@email.fr', 15, 14),
+('toto', 'alexandre.roux@email.fr', 16, 15),
+('toto', 'sarah.vincent@email.fr', 17, 16),
+('toto', 'maxime.fournier@email.fr', 18, 17),
+('toto', 'manon.girard@email.fr', 19, 18),
+('toto', 'nicolas.andre@email.fr', 20, 19),
+('toto', 'sophie.mercier@email.fr', 21, 20),
+('toto', 'pierre.blanc@email.fr', 22, 21),
+('toto', 'amelie.dupont@email.fr', 23, 22),
+('toto', 'julien.lambert@email.fr', 24, 23),
+('toto', 'elise.fontaine@email.fr', 25, 24),
+('toto', 'clement.bonnet@email.fr', 26, 25),
+('toto', 'mathilde.robert@email.fr', 27, 26),
+('toto', 'romain.richard@email.fr', 28, 27),
+('toto', 'charlotte.durand@email.fr', 29, 28),
+('toto', 'valentin.petit@email.fr', 30, 29),
+('toto', 'louise.lemoine@email.fr', 31, 30),
+('toto', 'theo.gauthier@email.fr', 32, 31),
+('toto', 'alice.perrin@email.fr', 33, 32),
+('toto', 'arthur.morel@email.fr', 34, 33),
+('toto', 'lucie.giraud@email.fr', 35, 34),
+('toto', 'raphael.nicolas@email.fr', 36, 35);
 
 -- --------------------------------------------------------
 
@@ -221,10 +272,9 @@ CREATE TABLE `livre` (
 
 INSERT INTO `livre` (`id_livre`, `auteur`, `titre`, `couverture`) VALUES
 (100, 'GUY DE MAUPASSANT', 'Une vie', 'images/couvertures/une_vie.jpg'),
-(101, 'GUY DE MAUPASSANT', 'Bel-Ami', 'images/couvertures/bel_ami.jpg'),
 (102, 'HONORE DE BALZAC', 'Le pere Goriot', 'images/couvertures/pere_goriot.jpg'),
 (103, 'ALPHONSE DAUDET', 'Le Petit chose', 'images/couvertures/petit_chose.jpg'),
-(104, 'ALEXANDRE DUMAS', 'La Reine Margot', 'images/couvertures/reine_margot.jpg'),
+(104, 'ALEXANDRE DUMAS', 'La Reine Margotte', 'images/couvertures/reine_margot.jpg'),
 (105, 'ALEXANDRE DUMAS', 'Les Trois Mousquetaires', 'images/couvertures/trois_mousquetaires.jpg'),
 (106, 'VICTOR HUGO', 'Les Miserables', 'images/couvertures/les_miserables.jpg'),
 (107, 'VICTOR HUGO', 'Notre-Dame de Paris', 'images/couvertures/notre_dame.jpg'),
@@ -260,7 +310,8 @@ INSERT INTO `livre` (`id_livre`, `auteur`, `titre`, `couverture`) VALUES
 (137, 'THEOPHILE GAUTIER', 'Le Capitaine Fracasse', 'images/couvertures/capitaine_fracasse.jpg'),
 (138, 'PROSPER MERIMEE', 'Carmen', 'images/couvertures/carmen.jpg'),
 (139, 'ALFRED DE MUSSET', 'Lorenzaccio', 'images/couvertures/lorenzaccio.jpg'),
-(140, 'HONORE DE BALZAC', 'Eugenie Grandet', 'images/couvertures/eugenie_grandet.jpg');
+(144, 'quelqu\'un', 'toto_9', ''),
+(146, '<script>alert()</script>', 'dqsd', 'coucou');
 
 --
 -- Index pour les tables déchargées
@@ -288,6 +339,13 @@ ALTER TABLE `emprunt`
   ADD PRIMARY KEY (`id_emprunt`),
   ADD KEY `id_abonne` (`id_abonne`),
   ADD KEY `id_livre` (`id_livre`);
+
+--
+-- Index pour la table `identifiant_abonne`
+--
+ALTER TABLE `identifiant_abonne`
+  ADD PRIMARY KEY (`id_identifiant_abonne`),
+  ADD KEY `abonne_id` (`abonne_id`);
 
 --
 -- Index pour la table `livre`
@@ -318,10 +376,16 @@ ALTER TABLE `emprunt`
   MODIFY `id_emprunt` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
+-- AUTO_INCREMENT pour la table `identifiant_abonne`
+--
+ALTER TABLE `identifiant_abonne`
+  MODIFY `id_identifiant_abonne` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
+--
 -- AUTO_INCREMENT pour la table `livre`
 --
 ALTER TABLE `livre`
-  MODIFY `id_livre` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
+  MODIFY `id_livre` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=147;
 
 --
 -- Contraintes pour les tables déchargées
@@ -333,6 +397,12 @@ ALTER TABLE `livre`
 ALTER TABLE `emprunt`
   ADD CONSTRAINT `emprunt_ibfk_1` FOREIGN KEY (`id_abonne`) REFERENCES `abonne` (`id_abonne`) ON DELETE SET NULL ON UPDATE SET NULL,
   ADD CONSTRAINT `emprunt_ibfk_2` FOREIGN KEY (`id_livre`) REFERENCES `livre` (`id_livre`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--
+-- Contraintes pour la table `identifiant_abonne`
+--
+ALTER TABLE `identifiant_abonne`
+  ADD CONSTRAINT `identifiant_abonne_ibfk_1` FOREIGN KEY (`abonne_id`) REFERENCES `abonne` (`id_abonne`) ON DELETE SET NULL ON UPDATE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
