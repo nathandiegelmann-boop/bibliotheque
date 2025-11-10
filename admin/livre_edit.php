@@ -66,7 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt_update->bindParam(':id_livre', $id_livre, PDO::PARAM_INT);
             
             if ($stmt_update->execute()) {
-                header('Location: livres.php?message=Livre modifié avec succès');
+                $_SESSION['success_message'] = 'Livre modifié avec succès';
+                header('Location: livres.php');
                 exit();
             } else {
                 $errors[] = "Erreur lors de la modification du livre.";
