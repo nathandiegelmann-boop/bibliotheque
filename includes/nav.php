@@ -70,11 +70,16 @@
                                         Déconnexion
                                   </a>
                             </li>
-                            <!-- Lien visible uniquement pour les visiteurs non connectés -->
+                            <!-- Liens visibles uniquement pour les visiteurs non connectés -->
                              <?php else: ?>
                             <li>
+                                  <a href="/bibliotheque/admin/signup.php" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded transition font-medium">
+                                        📝 Inscription
+                                  </a>
+                            </li>
+                            <li>
                                   <a href="/bibliotheque/login.php" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded transition font-medium">
-                                        Connexion
+                                        🔑 Connexion
                                   </a>
                             </li>
                             <?php endif; ?>

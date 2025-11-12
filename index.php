@@ -93,7 +93,7 @@ include __DIR__ . '/includes/nav.php';
                                 <?php if ($livre['statut'] === 'disponible'): ?>
                                     <!-- Badge vert pour les livres disponibles -->
                                     <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold shadow">
-                                        Disponible
+                                        <?= $livre['disponible'] ?>/<?= $livre['stock'] ?> dispo
                                     </span>
                                 <?php else: ?>
                                     <!-- Badge rouge pour les livres empruntés -->

@@ -23,24 +23,42 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     }
     if (empty($error)) {
         // D'abord vérifier dans la table abonne
-        $sql_abonne = "SELECT id_abonne, civilite, nom, prenom, email FROM abonne WHERE email = :email LIMIT 1;";
+        $sql_abonne = "SELECT id_abonne, civilite, nom, prenom, email, mot_de_passe FROM abonne WHERE email = :email LIMIT 1;";
         $log_abonne = $pdo->prepare($sql_abonne);
         $log_abonne->bindParam(":email", $email, PDO::PARAM_STR);
         $log_abonne->execute();
         
         if ($log_abonne->rowCount() === 1) {
-            // Abonné trouvé - créer la session et rediriger vers index
             $abonne = $log_abonne->fetch(PDO::FETCH_ASSOC);
             
-            $_SESSION['abonne_id'] = $abonne['id_abonne'];
-            $_SESSION['abonne_civilite'] = $abonne['civilite'];
-            $_SESSION['abonne_nom'] = $abonne['nom'];
-            $_SESSION['abonne_prenom'] = $abonne['prenom'];
-            $_SESSION['abonne_email'] = $abonne['email'];
-            
-            $_SESSION['message'] = 'Bienvenue ' . $abonne['prenom'] . ' (Abonné)';
-            header('Location: index.php');
-            exit;
+            // Vérifier si l'abonné a un mot de passe (nouveaux comptes)
+            if (!empty($abonne['mot_de_passe'])) {
+                // Nouveau système avec mot de passe hashé
+                if (password_verify($mot_de_passe, $abonne['mot_de_passe'])) {
+                    $_SESSION['abonne_id'] = $abonne['id_abonne'];
+                    $_SESSION['abonne_civilite'] = $abonne['civilite'];
+                    $_SESSION['abonne_nom'] = $abonne['nom'];
+                    $_SESSION['abonne_prenom'] = $abonne['prenom'];
+                    $_SESSION['abonne_email'] = $abonne['email'];
+                    
+                    $_SESSION['message'] = 'Bienvenue ' . $abonne['prenom'] . ' (Abonné)';
+                    header('Location: index.php');
+                    exit;
+                } else {
+                    $error = '<p>Email ou mot de passe incorrect</p>';
+                }
+            } else {
+                // Ancien système sans mot de passe (abonnés existants)
+                $_SESSION['abonne_id'] = $abonne['id_abonne'];
+                $_SESSION['abonne_civilite'] = $abonne['civilite'];
+                $_SESSION['abonne_nom'] = $abonne['nom'];
+                $_SESSION['abonne_prenom'] = $abonne['prenom'];
+                $_SESSION['abonne_email'] = $abonne['email'];
+                
+                $_SESSION['message'] = 'Bienvenue ' . $abonne['prenom'] . ' (Abonné) - Pensez à créer un mot de passe !';
+                header('Location: index.php');
+                exit;
+            }
         } else {
             // Pas trouvé dans abonne, vérifier dans administrateur
             $sql = "SELECT id_admin, login, mot_de_passe, nom, prenom, email FROM administrateur WHERE email = :email LIMIT 1;";
@@ -88,7 +106,7 @@ include __DIR__ . '/includes/nav.php';
         <!-- Titre de la page -->
         <header class="mb-8 text-center">
             <h1 class="text-3xl font-bold text-gray-800 mb-2">
-                Connexion Administrateur
+                Connexion 
             </h1>
             <p class="text-gray-600">
                 Connectez-vous pour accéder à l'interface d'administration
@@ -146,9 +164,14 @@ include __DIR__ . '/includes/nav.php';
                 </button>
             </form>
 
-            <!-- Lien de retour -->
-            <div class="mt-6 text-center">
-                <a href="/bibliotheque/index.php" class="text-blue-600 hover:text-blue-800 transition">
+            <!-- Liens de navigation -->
+            <div class="mt-6 text-center space-y-2">
+                <p class="text-gray-600">Pas encore inscrit ?</p>
+                <a href="admin/signup.php" class="text-green-600 hover:text-green-800 transition font-medium">
+                    ✍️ Créer un compte abonné
+                </a>
+                <br>
+                <a href="/bibliotheque/index.php" class="text-blue-600 hover:text-blue-800 transition text-sm">
                     ← Retour à l'accueil
                 </a>
             </div>
