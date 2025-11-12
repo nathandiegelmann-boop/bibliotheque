@@ -22,35 +22,57 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $error .= "<p>Le mot de passe doit contenir au moins 5 caractères.</p>";
     }
     if (empty($error)) {
-
-        $sql = "SELECT id_admin, login, mot_de_passe, nom, prenom, email FROM administrateur WHERE email = :email LIMIT 1;";
-        $log = $pdo->prepare($sql);
-        $log->bindParam(":email", $email, PDO::PARAM_STR);
-        $log->execute();
-    }
-    if ($log && $log->rowCount() === 1) {
-        $admin = $log->fetch(PDO::FETCH_ASSOC);
+        // D'abord vérifier dans la table abonne
+        $sql_abonne = "SELECT id_abonne, civilite, nom, prenom, email FROM abonne WHERE email = :email LIMIT 1;";
+        $log_abonne = $pdo->prepare($sql_abonne);
+        $log_abonne->bindParam(":email", $email, PDO::PARAM_STR);
+        $log_abonne->execute();
         
-        if (password_verify($mot_de_passe, $admin['mot_de_passe'])) {
-        $_SESSION['admin_id'] = $admin['id_admin'];
-        $_SESSION['admin_login'] = $admin['login'];
-        $_SESSION['admin_nom'] = $admin['nom'];
-        $_SESSION['admin_prenom'] = $admin['prenom'];
-        $_SESSION['admin_email'] = $admin['email'];
-
-        $update_sql = 'UPDATE administrateur SET dernier_acces = NOW() WHERE id_admin = :id_admin';
-        $update_value = $pdo->prepare($update_sql);
-        $update_value->bindParam(':id_admin', $admin['id_admin'], PDO::PARAM_INT);
-        $update_value->execute();
-
-        $_SESSION['message'] = 'Bienvenue ' . $admin['prenom'] . '';
-        header('Location: admin/dashboard.php');
-        exit;
+        if ($log_abonne->rowCount() === 1) {
+            // Abonné trouvé - créer la session et rediriger vers index
+            $abonne = $log_abonne->fetch(PDO::FETCH_ASSOC);
+            
+            $_SESSION['abonne_id'] = $abonne['id_abonne'];
+            $_SESSION['abonne_civilite'] = $abonne['civilite'];
+            $_SESSION['abonne_nom'] = $abonne['nom'];
+            $_SESSION['abonne_prenom'] = $abonne['prenom'];
+            $_SESSION['abonne_email'] = $abonne['email'];
+            
+            $_SESSION['message'] = 'Bienvenue ' . $abonne['prenom'] . ' (Abonné)';
+            header('Location: index.php');
+            exit;
         } else {
-            $error = '<p>Email ou mot de passe incorrect</p>';
+            // Pas trouvé dans abonne, vérifier dans administrateur
+            $sql = "SELECT id_admin, login, mot_de_passe, nom, prenom, email FROM administrateur WHERE email = :email LIMIT 1;";
+            $log = $pdo->prepare($sql);
+            $log->bindParam(":email", $email, PDO::PARAM_STR);
+            $log->execute();
+            
+            if ($log && $log->rowCount() === 1) {
+                $admin = $log->fetch(PDO::FETCH_ASSOC);
+                
+                if (password_verify($mot_de_passe, $admin['mot_de_passe'])) {
+                    $_SESSION['admin_id'] = $admin['id_admin'];
+                    $_SESSION['admin_login'] = $admin['login'];
+                    $_SESSION['admin_nom'] = $admin['nom'];
+                    $_SESSION['admin_prenom'] = $admin['prenom'];
+                    $_SESSION['admin_email'] = $admin['email'];
+
+                    $update_sql = 'UPDATE administrateur SET dernier_acces = NOW() WHERE id_admin = :id_admin';
+                    $update_value = $pdo->prepare($update_sql);
+                    $update_value->bindParam(':id_admin', $admin['id_admin'], PDO::PARAM_INT);
+                    $update_value->execute();
+
+                    $_SESSION['message'] = 'Bienvenue ' . $admin['prenom'] . '';
+                    header('Location: admin/dashboard.php');
+                    exit;
+                } else {
+                    $error = '<p>Email ou mot de passe incorrect</p>';
+                }
+            } else {
+                $error = '<p>Email non trouvé dans le système</p>';
+            }
         }
-    } else {
-        $error = '<p>Email ou mot de passe incorrect</p>';
     }
 }
 

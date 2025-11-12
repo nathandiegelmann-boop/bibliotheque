@@ -32,7 +32,8 @@ CREATE TABLE `abonne` (
   `civilite` varchar(5) NOT NULL,
   `nom` varchar(25) NOT NULL,
   `prenom` varchar(15) NOT NULL,
-  `email` varchar(50) NOT NULL
+  `email` varchar(50) NOT NULL,
+    `email` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -50,7 +51,7 @@ INSERT INTO `abonne` (`id_abonne`, `civilite`, `nom`, `prenom`, `email`) VALUES
 (8, 'Mme', 'Simon', 'Emma', 'emma.simon@email.fr'),
 (9, 'M.', 'Laurent', 'Hugo', 'hugo.laurent@email.fr'),
 (10, 'Mme', 'Lefebvre', 'Lea', 'lea.lefebvre@email.fr'),
-(11, 'M.', 'Michel', 'Nathan', 'nathan.michel@email.fr'),
+,
 (12, 'Mme', 'Garcia', 'Camille', 'camille.garcia@email.fr'),
 (13, 'M.', 'David', 'Antoine', 'antoine.david@email.fr'),
 (14, 'Mme', 'Bertrand', 'Julie', 'julie.bertrand@email.fr'),

@@ -1,16 +1,18 @@
 <?php
+session_start();
 require_once __DIR__ . '/config/database.php';
 
 $page_title = "Accueil - Bibliothèque";
 $pdo = getDbConnection();
 
 $sql = "SELECT l.id_livre, l.auteur, l.titre, l.couverture,
-CASE WHEN e.id_emprunt IS NOT NULL THEN 'emprunte'
+COUNT(e.id_emprunt) as emprunts_en_cours,
+CASE WHEN COUNT(e.id_emprunt) > 0 THEN 'emprunte'
 	ELSE 'disponible'
 END AS statut
 FROM livre l 
-LEFT JOIN (SELECT id_livre, id_emprunt FROM emprunt WHERE date_rendu IS NULL) e 
-ON l.id_livre = e.id_livre
+LEFT JOIN emprunt e ON l.id_livre = e.id_livre AND e.date_rendu IS NULL
+GROUP BY l.id_livre, l.auteur, l.titre, l.couverture
 ORDER BY l.titre ASC;";
 
 $reqPreparee = $pdo->prepare($sql);
@@ -25,6 +27,30 @@ include __DIR__ . '/includes/nav.php';
 
 <!-- Contenu principal de la page -->
 <main class="container mx-auto px-4 py-8 flex-grow" role="main">
+    <!-- Messages -->
+    <?php if (isset($_SESSION['message'])): ?>
+        <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded" role="alert">
+            <span class="block sm:inline"><?= $_SESSION['message'] ?></span>
+        </div>
+        <?php unset($_SESSION['message']); ?>
+    <?php endif; ?>
+    
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded" role="alert">
+            <span class="block sm:inline">✅ <?= $_SESSION['success'] ?></span>
+        </div>
+        <?php unset($_SESSION['success']); ?>
+    <?php endif; ?>
+    
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" role="alert">
+            <span class="block sm:inline">❌ <?= $_SESSION['error'] ?></span>
+        </div>
+        <?php unset($_SESSION['error']); ?>
+    <?php endif; ?>
+
+
+
     <!-- Titre de la page -->
     <header class="mb-8">
         <h1 class="text-4xl font-bold text-gray-800 mb-2">
@@ -66,13 +92,13 @@ include __DIR__ . '/includes/nav.php';
                             <div class="absolute top-2 right-2">
                                 <?php if ($livre['statut'] === 'disponible'): ?>
                                     <!-- Badge vert pour les livres disponibles -->
-                                    <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow">
-                                        ✓ Disponible
+                                    <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold shadow">
+                                        Disponible
                                     </span>
                                 <?php else: ?>
                                     <!-- Badge rouge pour les livres empruntés -->
-                                    <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow">
-                                        ✗ En prêt
+                                    <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold shadow">
+                                        ✗ Complet
                                     </span>
                                 <?php endif; ?>
                             </div>
@@ -92,9 +118,35 @@ include __DIR__ . '/includes/nav.php';
                             </p>
 
                             <!-- ID du livre -->
-                            <p class="text-gray-500 text-sm">
+                            <p class="text-gray-500 text-sm mb-3">
                                 Référence : #<?= $livre['id_livre']; ?>
                             </p>
+
+                            <!-- Bouton d'emprunt (visible seulement pour les abonnés connectés) -->
+                            <?php if (isset($_SESSION['abonne_id'])): ?>
+                                <?php if ($livre['statut'] === 'disponible'): ?>
+                                    <form method="POST" action="emprunter.php" class="w-full">
+                                        <input type="hidden" name="livre_id" value="<?= $livre['id_livre'] ?>">
+                                        <button type="submit" 
+                                                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition"
+                                                onclick="return confirm('Confirmer l\'emprunt de &quot;<?= htmlspecialchars($livre['titre']) ?>&quot; ?')">
+                                            📖 Emprunter
+                                        </button>
+                                    </form>
+                                <?php else: ?>
+                                    <button disabled 
+                                            class="w-full bg-gray-400 text-white font-bold py-2 px-4 rounded cursor-not-allowed">
+                                        ❌ Non disponible
+                                    </button>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <div class="text-center">
+                                    <a href="login.php" 
+                                       class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                        Connectez-vous pour emprunter
+                                    </a>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </article>
                 <?php endforeach; ?>
